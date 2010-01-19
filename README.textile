@@ -1,0 +1,7 @@
+h1. Tool to cut image into 9 sliced background
+
+h2. Requirements
+* ruby
+* gem install sinatra thin json
+* optipng
+* pngcrush

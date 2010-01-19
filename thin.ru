@@ -1,0 +1,2 @@
+require 'imageCutter'
+run ImageCutter
