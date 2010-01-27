@@ -206,7 +206,7 @@ tools.imageCutter.DropTarget = uki.newClass(uki.view.Base, new function() {
         Base._createDom.call(this);
         this._dom.style.cssText += ';text-align:center;line-height:20px;white-space:no-wrap;font-size:12px;color:#333;-moz-border-radius:3px;-webkit-border-radius:3px;'
         this._dom.style.border = '1px dashed #999';
-        this._dom.innerHTML = 'Drop Here';
+        this._dom.innerHTML = 'Drop Image Here';
         
         this.bind('dragleave', function(e) {
             this._dom.style.borderColor = '#999';
@@ -265,10 +265,10 @@ tools.imageCutter.build = function() {
                             // value: '/src/uki-theme/airport/i/button/normal.png', name: 'url' },
                         { view: 'Box', rect: '60 32 330 46', anchors: 'left rigth top',
                             childViews: [
-                                { view: 'TextField', rect: '10 10 50 22', anchors: 'top left', name: 'top', placeholder: 'top', value: '3' },
-                                { view: 'TextField', rect: '70 10 50 22', anchors: 'top left', name: 'right', placeholder: 'right', value: '3' },
-                                { view: 'TextField', rect: '130 10 50 22', anchors: 'top left', name: 'bottom', placeholder: 'bottom', value: '3' },
-                                { view: 'TextField', rect: '190 10 50 22', anchors: 'top left', name: 'left', placeholder: 'left', value: '3' },
+                                { view: 'TextField', rect: '10 10 50 22', anchors: 'top left', name: 'top', placeholder: 'top', value: '0' },
+                                { view: 'TextField', rect: '70 10 50 22', anchors: 'top left', name: 'right', placeholder: 'right', value: '0' },
+                                { view: 'TextField', rect: '130 10 50 22', anchors: 'top left', name: 'bottom', placeholder: 'bottom', value: '0' },
+                                { view: 'TextField', rect: '190 10 50 22', anchors: 'top left', name: 'left', placeholder: 'left', value: '0' },
                                 { view: 'Checkbox', rect: '260 10 22 22', anchors: 'top left', name: 'download' },
                                 { view: 'Label', rect: '285 10 100 22', anchors: 'top left', text: 'download', name: 'download-label' }
                             ]
