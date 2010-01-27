@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="moikrug" default="deploy">
+    <dirname property="project.dir" file="${ant.file}"/>
+	<property name="rsync.cmd" value="rsync"/>
+		
+    <target name="deploy">
+        <exec executable="${rsync.cmd}">
+            <arg value="-vazC" />
+            <arg value="--delete" />
+            <arg value="--exclude" />
+            <arg value="build.xml" />
+            <arg value="--exclude" />
+            <arg value="*.pid" />
+            <arg value="--exclude" />
+            <arg value="*.log" />
+            <arg value="--exclude" />
+            <arg value="tmp" />
+            <arg value="--exclude" />
+            <arg value="cutted" />
+            <arg value="-e" /><arg value="ssh" />
+            <arg value="${project.dir}/" />
+            <arg value="ukijs.org:/var/www/uki-imageCutter/" />
+        </exec>
+    </target>
+</project>

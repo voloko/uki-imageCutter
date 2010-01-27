@@ -191,10 +191,9 @@ tools.imageCutter.makeCode = function(baseName, inset, response) {
     for (var i=0; i < partNames.length; i++) {
         var part = parts[partNames[i]];
         if (!part) continue;
-        codeLines.push('    ' + partNames[i] + ': [u(prefix + "' + part.suffix + '"), "' + part.dataUrl + '"' + (part.alphaFix ? ', u(prefix + "' + partNames[i] + '.gif")' : '') + ']');
+        codeLines.push('    ' + partNames[i] + ': ["' + prefix + '-' + part.suffix + '", "' + part.dataUrl + '"' + (part.alphaFix ? ', "' + prefix + '-' + partNames[i] + '.gif"' : '') + ']');
     };
-    return 'var prefix = "' + prefix + '-";\n' +
-            'return new uki.background.Sliced9({\n' + 
+    return 'return new uki.background.Sliced9({\n' + 
                 codeLines.join(',\n') + "\n" +
             '}, "' + inset + '");'
 };
@@ -259,7 +258,7 @@ tools.imageCutter.build = function() {
             childViews: [
                 { view: 'Box', rect: '0 0 400 80', anchors: 'top left right', background: 'theme(panel)',
                     childViews: [
-                        { view: 'Label', rect: '10 10 50 22', anchors: 'left top', align: 'right', text: 'URL:' },
+                        { view: 'Label', rect: '10 10 50 22', anchors: 'left top', align: 'right', text: 'Image:' },
                         { view: 'tools.imageCutter.DropTarget', rect: '70 10 310 20', anchors: 'left right top', name: 'drop' },
                         // { view: 'TextField', rect: '70 10 220 22',  anchors: 'top left right', 
                             // value: '/src/uki-theme/airport/i/button/normal.png', name: 'url' },
