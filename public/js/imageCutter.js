@@ -147,10 +147,9 @@ tools.imageCutter.sendRequest = function(data, callback) {
     $.ajax( { url: '/imageCutter', type: 'POST', data: { json: data }, complete: callback } );
 };
 
-tools.imageCutter.getRequest = function(url, image, inset) {
+tools.imageCutter.getRequest = function(baseName, image, inset) {
     var parts = tools.imageCutter.getParts(image, inset),
         request = [],
-        baseName = url.replace(/.*\//, ''),
         prefix = baseName.replace(/\.[^\.]+$/, ''),
         parts = tools.imageCutter.getParts(image, inset);
         
@@ -171,10 +170,10 @@ tools.imageCutter.getRequest = function(url, image, inset) {
     return JSON.stringify(request);
 };
 
-tools.imageCutter.makeCode = function(url, inset, response) {
+tools.imageCutter.makeCode = function(baseName, inset, response) {
     var optimized = response.optimized,
         parts = {},
-        prefix = url.match(/([^\/]+\/)?[^\/]+$/)[0].replace(/\.[^\.]+$/, ''),
+        prefix = baseName.match(/([^\/]+\/)?[^\/]+$/)[0].replace(/\.[^\.]+$/, ''),
         codeLines = [];
         
     for (var i=0; i < optimized.length; i++) {
@@ -200,6 +199,47 @@ tools.imageCutter.makeCode = function(url, inset, response) {
             '}, "' + inset + '");'
 };
 
+tools.imageCutter.DropTarget = uki.newClass(uki.view.Base, new function() {
+    var Base = uki.view.Base.prototype;
+
+    this._createDom = function() {
+        Base._createDom.call(this);
+        this._dom.style.cssText += ';text-align:center;line-height:20px;white-space:no-wrap;font-size:12px;color:#333;-moz-border-radius:3px;-webkit-border-radius:3px;'
+        this._dom.style.border = '1px dashed #999';
+        this._dom.innerHTML = 'Drop Here';
+        
+        this.bind('dragleave', function(e) {
+            this._dom.style.borderColor = '#999';
+            uki.dom.preventDefault(e.domEvent);
+        });
+        
+        this.bind('dragover', function(e) {
+            uki.dom.preventDefault(e.domEvent);
+        });
+        
+        this.bind('dragenter', function(e) {
+            this._dom.style.borderColor = '#333';
+            uki.dom.preventDefault(e.domEvent);
+        });
+        
+        this.bind('drop', function(e) {
+            this._dom.style.borderColor = '#999';
+            var dt = e.domEvent.dataTransfer;
+            if (
+                dt.files && dt.files.length && 
+                (dt.files[0].type == 'image/png' || dt.files[0].type == 'image/jpge' || dt.files[0].type == 'image/gif') && 
+                dt.files[0].getAsDataURL
+            ) {
+                this.imageUrl = dt.files[0].getAsDataURL('image/png');
+                this.fileName = dt.files[0].fileName;
+                this._dom.innerHTML = dt.files[0].fileName;
+                this.trigger('image.dropped', {source: this, imageUrl: this.imageUrl});
+            }
+            uki.dom.preventDefault(e.domEvent);
+        });
+    };
+});
+
 tools.imageCutter._loadImage = function (url, callback) {
     var img = new Image(),
         _this = this,
@@ -220,8 +260,9 @@ tools.imageCutter.build = function() {
                 { view: 'Box', rect: '0 0 400 80', anchors: 'top left right', background: 'theme(panel)',
                     childViews: [
                         { view: 'Label', rect: '10 10 50 22', anchors: 'left top', align: 'right', text: 'URL:' },
-                        { view: 'TextField', rect: '70 10 310 22',  anchors: 'top left right', 
-                            value: '/src/uki-theme/airport/i/button/normal.png', name: 'url' },
+                        { view: 'tools.imageCutter.DropTarget', rect: '70 10 310 20', anchors: 'left right top', name: 'drop' },
+                        // { view: 'TextField', rect: '70 10 220 22',  anchors: 'top left right', 
+                            // value: '/src/uki-theme/airport/i/button/normal.png', name: 'url' },
                         { view: 'Box', rect: '60 32 330 46', anchors: 'left rigth top',
                             childViews: [
                                 { view: 'TextField', rect: '10 10 50 22', anchors: 'top left', name: 'top', placeholder: 'top', value: '3' },
@@ -249,23 +290,24 @@ tools.imageCutter.build = function() {
     
     p.find('[name=cut]').bind('click', function() {
         p.find('[name=cut]').text('Cutting...');
-        var url = p.find('[name=url]').attr('value');
-        tools.imageCutter._loadImage(url, function(image) {
-            
+        var drop = p.find('[name=drop]');
+        
+        tools.imageCutter._loadImage(drop.attr('imageUrl'), function(image) {
             var coords = uki.map(['top', 'right', 'bottom', 'left'], function() {
                     return p.find('[name=' + this + ']').attr('value');
                 }),
                 inset = uki.geometry.Inset.fromString(coords.join(' ')),
-                json = tools.imageCutter.getRequest(url, image, inset);
-                
+                json = tools.imageCutter.getRequest(drop.attr('fileName'), image, inset);
+
             tools.imageCutter.sendRequest(json, function(xhr) {
                 var response = eval('(' + xhr.responseText + ')');
-                var code = tools.imageCutter.makeCode(url, inset, response);
+                var code = tools.imageCutter.makeCode(drop.attr('fileName'), inset, response);
                 p.find('[name=result]').html('<div style="white-space:pre; padding: 5px;">' + code + '</div>');
                 p.find('[name=cut]').text('Cut');
-                
+
                 if (p.find('[name=download]').checked()) location.href = response.url;
             });
+            
         })
     });
     return p;
