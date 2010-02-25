@@ -226,7 +226,7 @@ tools.imageCutter.DropTarget = uki.newClass(uki.view.Base, new function() {
             var dt = e.domEvent.dataTransfer;
             if (
                 dt.files && dt.files.length && 
-                (dt.files[0].type == 'image/png' || dt.files[0].type == 'image/jpge' || dt.files[0].type == 'image/gif') && 
+                (dt.files[0].type == 'image/png' || dt.files[0].type == 'image/jpeg' || dt.files[0].type == 'image/gif') && 
                 dt.files[0].getAsDataURL
             ) {
                 this.imageUrl = dt.files[0].getAsDataURL('image/png');
