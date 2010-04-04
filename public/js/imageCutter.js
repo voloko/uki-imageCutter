@@ -193,8 +193,8 @@ tools.imageCutter.makeCode = function(baseName, inset, response) {
         if (!part) continue;
         codeLines.push('    ' + partNames[i] + ': ["' + prefix + '-' + part.suffix + '", "' + part.dataUrl + '"' + (part.alphaFix ? ', "' + prefix + '-' + partNames[i] + '.gif"' : '') + ']');
     };
-    return 'return new uki.background.Sliced9({\n' + 
-                codeLines.join(',\n') + "\n" +
+    return 'return new uki.background.Sliced9({<br />' + 
+                codeLines.join(',<br />') + "<br />" +
             '}, "' + inset + '");'
 };
 
@@ -209,21 +209,21 @@ tools.imageCutter.DropTarget = uki.newClass(uki.view.Base, new function() {
         
         this.bind('dragleave', function(e) {
             this._dom.style.borderColor = '#999';
-            uki.dom.preventDefault(e.domEvent);
+            e.preventDefault();
         });
         
         this.bind('dragover', function(e) {
-            uki.dom.preventDefault(e.domEvent);
+            e.preventDefault();
         });
         
         this.bind('dragenter', function(e) {
             this._dom.style.borderColor = '#333';
-            uki.dom.preventDefault(e.domEvent);
+            e.preventDefault();
         });
         
         this.bind('drop', function(e) {
             this._dom.style.borderColor = '#999';
-            var dt = e.domEvent.dataTransfer;
+            var dt = e.dataTransfer;
             if (
                 dt.files && dt.files.length && 
                 (dt.files[0].type == 'image/png' || dt.files[0].type == 'image/jpeg' || dt.files[0].type == 'image/gif') && 
@@ -234,7 +234,7 @@ tools.imageCutter.DropTarget = uki.newClass(uki.view.Base, new function() {
                 this._dom.innerHTML = dt.files[0].fileName;
                 this.trigger('image.dropped', {source: this, imageUrl: this.imageUrl});
             }
-            uki.dom.preventDefault(e.domEvent);
+            e.preventDefault();
         });
     };
 });
