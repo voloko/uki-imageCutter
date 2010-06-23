@@ -144,7 +144,7 @@ tools.imageCutter.makeFullyTransparent = function(canvas) {
 };
 
 tools.imageCutter.sendRequest = function(data, callback) {
-    $.ajax( { url: '/imageCutter', type: 'POST', data: { json: data }, complete: callback } );
+    $.ajax( { url: '/imageCutter/', type: 'POST', data: { json: data }, complete: callback } );
 };
 
 tools.imageCutter.getRequest = function(baseName, image, inset) {

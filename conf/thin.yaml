@@ -1,10 +1,10 @@
 ---
   environment: development
   # address: 127.0.0.1
-  port: 21121 # 21 u 11 k 9 i
-  pid: thin.pid
-  rackup: thin.ru
-  log: thin.log
+  port: 9200 # 21 u 11 k 9 i
+  pid: log/thin.pid
+  rackup: conf/thin.ru
+  log: log/thin.log
   max_conns: 1024
   timeout: 30
   max_persistent_conns: 1024

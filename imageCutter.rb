@@ -40,7 +40,7 @@ class ImageCutter < Sinatra::Base
   #   ],
   #   url: 'path-to-zip-file'
   # }
-  post '/imageCutter' do
+  post '/imageCutter/' do
     items = JSON.load(params['json'])
     optimized = []
     Dir.mktmpdir { |dir|
