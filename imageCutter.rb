@@ -12,11 +12,11 @@ UKI_PATH = '/src/'
 
 class ImageCutter < Sinatra::Base
   get '/' do
-    File.open(File.join('public', 'imageCutter.html'), 'r') { |f| f.read }
+    File.open(File.join('public', 'index.html'), 'r') { |f| f.read }
   end
   
   get '/imageCutter' do
-    File.open(File.join('public', 'imageCutter.html'), 'r') { |f| f.read }
+    File.open(File.join('public', 'index.html'), 'r') { |f| f.read }
   end
   
   get '/src/*' do
